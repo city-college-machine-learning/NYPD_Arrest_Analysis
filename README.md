@@ -1,3 +1,4 @@
+
 # examining arrests in the New york City 
 
 Introduction & Motivation: New York City ranks #25 in the United States list of cities with most violent crime rates . Since we all reside in New York City and safety is a common concern, we thought it would be useful to understand which factors about crimes in NYC allow us to make predictions. In order to do this, we analyze the New York Police Department's citywide crime statistics for 2019. The NYPD dataset contains arrest information that contains information such as the type of offence, the age and race of the offenders, the borough where the crime occurred, and other relevant information for analysis. 
@@ -18,4 +19,5 @@ Intended Experiments: The machine learning methods to be employed are the follow
 5.	Use K-means clustering to see cluster the crimes in NYC into different cluster, if any. And identify what the clusters have in common.
 Evaluation
 We plan to evaluate using a test split of 30% and also separately a 5-fold-cv to compare. We will use categorical cross entropy for loss and stochastic gradient decent (SGD) for optimizer. We will also use Adam optimizer for comparison, in addition to SGD. We will try different learning rates (0.001, 0.1, 0.3) to see which one performs best. We will stop fitting the model when the validation loss does not decrease any further.
+
 
