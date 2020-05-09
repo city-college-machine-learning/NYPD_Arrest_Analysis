@@ -3,6 +3,8 @@
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.metrics import precision_score, recall_score, f1_score
 from ML import model_constants
+from sklearn.preprocessing import LabelEncoder
+lab_enc = LabelEncoder()
 
 # tuning function
 
@@ -90,9 +92,10 @@ def train_and_test(df, target_col, model_name, pct_test):
     :param pct_test: percent to keep for the testing
     :return: return the best model and its performance
     """
+    y = lab_enc.fit_transform(target_col)
     model_abr = ""
     for model_info in model_constants.model_names:
-        if model_info["label"] == model_name
+        if model_info["label"] == model_name:
             model_abr = model_info["value"]
             break
 
