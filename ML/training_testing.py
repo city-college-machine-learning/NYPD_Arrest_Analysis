@@ -73,11 +73,19 @@ def get_model_perform(y_preds, y_test, labels):
     :param labels: labels
     :return: precision, recall, f1
     """
+    precision = precision_score(y_test, y_preds, average=None)
+    recall = recall_score(y_test, y_preds, average=None)
+    f1 = f1_score(y_test, y_preds, average=None)
 
-    precision = precision_score(y_test, y_preds, average='weighted')
-    recall = recall_score(y_test, y_preds, average='weighted')
-    f1 = f1_score(y_test, y_preds, average='weighted')
-    results = [precision, recall, f1]
+    results = []
+    for(label, p, r, f1) in zip(labels, precision, recall, f1):
+        results.append({'label': label, 'precision': p, 'recall': r, 'f1': f1})
+
+    avg_precision = precision_score(y_test, y_preds, average='weighted')
+    avg_recall = recall_score(y_test, y_preds, average='weighted')
+    avg_f1 = f1_score(y_test, y_preds, average='weighted')
+
+    results.append({'label': 'average', 'precision': avg_precision, 'recall': avg_recall, 'f1': avg_f1})
 
     return results
 
