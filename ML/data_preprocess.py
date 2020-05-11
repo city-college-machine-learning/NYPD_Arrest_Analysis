@@ -4,18 +4,20 @@ lab_enc = LabelEncoder()
 
 
 def data_preprocess1():
-    data = pd.read_csv('C:/Users/daoud/NYPD_Arrest_Data__Year_to_Date_.csv')
-    data.drop(['ARREST_KEY', 'PD_CD', 'KY_CD', 'LAW_CODE', ], axis=1, inplace=True)
+    data = pd.read_csv('/Users/jja/GitHub/NYPD_Arrest_Data__Year_to_Date_.csv')
+
+    data.drop(['ARREST_DATE','ARREST_KEY', 'PD_CD', 'PD_DESC', 'KY_CD', 'LAW_CODE',\
+               'OFNS_DESC', 'X_COORD_CD','Y_COORD_CD','Latitude','Longitude'], axis=1, inplace=True)
     data.dropna(inplace=True)
-    data.rename(columns={'PD_DESC':'offenses', 'LAW_CAT_CD':'offense_type'}, inplace=True)
+    crimes = {'M': 'Misdemeanor', 'F': 'Felony', 'V': 'Violation', 'I': 'Infraction'}
+    data['LAW_CAT_CD'] = data['LAW_CAT_CD'].replace(crimes)
 
-    X = data[['offenses', 'offense_type', 'ARREST_BORO', 'AGE_GROUP']].values
+    data = data[data.LAW_CAT_CD != 'I']
+    data = data[data.LAW_CAT_CD != 'V']
+    target_removed = data.loc[:, data.columns != 'LAW_CAT_CD']
 
-    X[:, 0] = lab_enc.fit_transform(X[:,0])
-    X[:, 1] = lab_enc.fit_transform(X[:, 1])
-    X[:, 2] = lab_enc.fit_transform(X[:, 2])
-    X[:, 3] = lab_enc.fit_transform(X[:, 3])
+    X = pd.get_dummies(target_removed, drop_first=True)
 
-    y = lab_enc.fit_transform(data[['PERP_RACE']].values)
+    y = data['LAW_CAT_CD'].values
 
     return X, y
