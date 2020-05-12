@@ -20,7 +20,7 @@ model_names = [
 # tuning_param
 
 tuning_params = {
-    'LR': {'penalty': ['l2','l1'], 'C': [0.0001, 0.001, 0.01,.1]},
+    'LR': {'penalty': ['l2'], 'C': [0.0001, 0.001, 0.01,.1]},
     'RF': {'n_estimators': [1, 20, 30, 40, 50]},
     'SVM': {'C': [0.001, 0.01, 0.1, 1]}
 }
