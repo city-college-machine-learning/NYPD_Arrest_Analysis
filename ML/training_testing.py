@@ -2,7 +2,7 @@
 
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.metrics import precision_score, recall_score, f1_score
-from ML import model_constants
+import model_constants
 from sklearn.preprocessing import LabelEncoder
 lab_enc = LabelEncoder()
 
@@ -41,14 +41,14 @@ def train_a_model(model, X_train, y_train, cross_vals):
 # split the data into train and test
 
 
-def data_split(df, target_col, test_plit):
+def data_split(df, target_col, test_split):
     """
     :param df: an array or dataframe of features data
     :param target_col: 1D array or column of the target labels
     :param test_plit: percent of data to keep for test set
     :return: training and testing set
     """
-    X_train, X_test, y_train, y_test = train_test_split(df, target_col, test_size=test_plit)
+    X_train, X_test, y_train, y_test = train_test_split(df, target_col, test_size=test_split)
     return X_train, X_test, y_train, y_test
 
 # function to uses a model to predict
@@ -73,11 +73,19 @@ def get_model_perform(y_preds, y_test, labels):
     :param labels: labels
     :return: precision, recall, f1
     """
+    precision = precision_score(y_test, y_preds, average=None)
+    recall = recall_score(y_test, y_preds, average=None)
+    f1 = f1_score(y_test, y_preds, average=None)
 
-    precision = precision_score(y_test, y_preds, average='weighted')
-    recall = recall_score(y_test, y_preds, average='weighted')
-    f1 = f1_score(y_test, y_preds, average='weighted')
-    results = [precision, recall, f1]
+    results = []
+    for(label, p, r, f1) in zip(labels, precision, recall, f1):
+        results.append({'label': label, 'precision': p, 'recall': r, 'f1': f1})
+
+    avg_precision = precision_score(y_test, y_preds, average='weighted')
+    avg_recall = recall_score(y_test, y_preds, average='weighted')
+    avg_f1 = f1_score(y_test, y_preds, average='weighted')
+
+    results.append({'label': 'average', 'precision': avg_precision, 'recall': avg_recall, 'f1': avg_f1})
 
     return results
 
@@ -92,7 +100,7 @@ def train_and_test(df, target_col, model_name, pct_test):
     :param pct_test: percent to keep for the testing
     :return: return the best model and its performance
     """
-    y = lab_enc.fit_transform(target_col)
+    y = target_col
     model_abr = ""
     for model_info in model_constants.model_names:
         if model_info["label"] == model_name:
@@ -100,7 +108,7 @@ def train_and_test(df, target_col, model_name, pct_test):
             break
 
     model = model_constants.models.get(model_abr)
-    X_train, X_test, y_train, y_test = data_split(df, target_col, test_plit=pct_test)
+    X_train, X_test, y_train, y_test = data_split(df, target_col, test_split=pct_test)
     cross_val = tune_model(model_abr, model, X_train, y_train, model_constants.tuning_params)
     model = train_a_model(model, X_train, y_train, cross_val)
     model_preds = model_predict(X_test, model)

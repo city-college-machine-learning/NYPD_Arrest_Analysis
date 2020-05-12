@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestClassifier
 models = {
     'LR': LogisticRegression(solver='lbfgs', multi_class='multinomial', penalty='l1'),
     'RF': RandomForestClassifier(n_estimators=40),
-    'SVM': LinearSVC()
+    'SVM': LinearSVC(dual=False)
 }
 
 model_names = [
